@@ -887,3 +887,7 @@ org.eclipse.jdt.core.JavaModelException: Index out of bounds
 2018-03-20 18:10:59,080 [Worker-187] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/rayanegouda/workspace/com.test.kafka/src/main/resources
 2018-03-20 18:10:59,081 [Worker-187] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
 2018-03-20 18:10:59,081 [Worker-187] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/rayanegouda/workspace/com.test.kafka/src/test/resources
+2018-03-21 00:05:23,169 [Worker-221] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2018-03-21 00:05:23,170 [Worker-221] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/rayanegouda/workspace/com.test.kafka/src/main/resources
+2018-03-21 00:05:23,170 [Worker-221] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2018-03-21 00:05:23,170 [Worker-221] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/rayanegouda/workspace/com.test.kafka/src/test/resources
