@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="org.apache.kafka.streams.kstream.KTable"/>
+<fullyQualifiedTypeName name="com.github.jems.JsonSerde"/>
+<fullyQualifiedTypeName name="com.github.jems.Adresse"/>
+<fullyQualifiedTypeName name="com.github.jems.Contact"/>
+</qualifiedTypeNameHistroy>
