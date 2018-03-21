@@ -1,0 +1,96 @@
+package testjoin.com.test.kafka;
+ 
+import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.common.utils.Bytes;
+import org.apache.kafka.streams.Consumed;
+import org.apache.kafka.streams.KafkaStreams;
+import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.StreamsConfig;
+import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.KTable;
+import org.apache.kafka.streams.kstream.Materialized;
+import org.apache.kafka.streams.kstream.Produced;
+import org.apache.kafka.streams.state.KeyValueStore;
+
+import java.util.Arrays;
+import java.util.Properties;
+ 
+public class JointureTables {
+ 
+    public static void main(final String[] args) throws Exception {
+        Properties config = new Properties();
+        config.put(StreamsConfig.APPLICATION_ID_CONFIG, "jointure-contact-adresse");
+        config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
+        config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
+ 
+        StreamsBuilder builder = new StreamsBuilder();  
+        KTable<String, String> adressestable = builder.table("adresses");
+        JsonSerde<Adresse> adresseSerde = new JsonSerde<>(Adresse.class);
+        KTable<String, Adresse> contacttable = builder.table("contact", Consumed.with(Serdes.String(), adresseSerde));
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        KStream<String, Adresse> adresses = builder.stream("adresses", Consumed.with(Serdes.String(), adresseserde));
+       
+        KTable<String, Adresse> adressestable = builder.stream("adresses").
+        		
+        		
+        		
+        		groupBy(keyValueMapper).aggregate(initializer,
+				aggregator, materialized)table(Serdes.String(), adresseserde, "adresses");
+        		
+        		
+        		
+        		
+        		
+        		
+        		adresses
+         .flatMapValues(adresses -> Arrays.asList(textLine.toLowerCase().split("\n")))	
+        		
+            .flatMapValues(adresses -> Arrays.asList(adresses.toString().toLowerCase().split("\\W+")))
+            
+            .groupBy((key, word) -> word)
+            .count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("counts-store"));
+        wordCounts.toStream().to("WordsWithCountsTopic", Produced.with(Serdes.String(), Serdes.Long()));
+ 
+        KafkaStreams streams = new KafkaStreams(builder.build(), config);
+        streams.start();
+    }
+ 
+}
+/*
+ * // Création d'un KStream (flux) à partir du topic "achats"
+KStream<String, ProduitBrut> achats = builder.stream(Serdes.String(), produitBrutSerde, "achats");
+
+// Création d'une KTable (table) à partir du topic "referentiel"
+KTable<String, Referentiel> referentiel = builder.table(Serdes.String(), referentielSerde, "referentiel");
+KStream<String, ProduitEnrichi> enriched = achats
+    // Re-partitionnement du flux avec la nouvelle clé qui nous permettra de faire une jointure
+    .map((k, v) -> new KeyValue<>(v.getId().toString(), v))
+    // Jointure du flux d'achats avec le référentiel
+    .leftJoin(referentiel, (achat, ref) -> {
+        if (ref == null) return new ProduitEnrichi(achat.getId(), "REF INCONNUE", achat.getPrice());
+        else return new ProduitEnrichi(achat.getId(), ref.getName(), achat.getPrice());
+    });
+
+// On publie le flux dans un topic "achats-enrichis"
+enriched.to(Serdes.String(), produitEnrichiSerde, "achats-enrichis");
+
+// Enfin, on démarre l'application
+KafkaStreams streams = new KafkaStreams(builder, streamsConfiguration);
+streams.start();*/
+ */
