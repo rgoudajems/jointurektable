@@ -1,17 +1,20 @@
 package testjoin.com.test.kafka;
 
-public class Adresse {
-	int id;
-	String Adresse;
-	public Adresse(int id, String adresse) {
+import java.util.StringTokenizer;
+
+import testjoin.com.test.kafka.Contact.Builder;
+
+public class Adresse implements HasId {
+	public Adresse() {
 		super();
-		this.id = id;
-		Adresse = adresse;
+		// TODO Auto-generated constructor stub
 	}
-	public int getId() {
+	String id;
+	String Adresse;
+	public String getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getAdresse() {
@@ -20,4 +23,41 @@ public class Adresse {
 	public void setAdresse(String adresse) {
 		Adresse = adresse;
 	}
+	public Adresse(String id, String adresse) {
+		super();
+		this.id = id;
+		Adresse = adresse;
+	}
+	
+	public void parseString(String csvStr){
+	    StringTokenizer st = new StringTokenizer(csvStr,",");
+	    id = String.valueOf(st.nextToken());
+	    Adresse = st.nextToken();
+
+	}
+
+	@Override
+	public String toString() {
+	    return "Adresse{" +
+	            "id=" + "\'"+ id +"\'"+
+	            ", adresse:" +"\'" + Adresse + "\'"+
+	            '}';
+
+}
+	public static final class Builder {
+	    private String id;
+	    private String adresse;
+
+	    private Builder(Adresse adresse){
+	       this.id = adresse.getId();
+	       this.adresse = adresse.getAdresse(); 
+	    }
+
+
+	    public Contact build(){
+	        return new Contact(id,adresse);
+	}
+	    public static Builder builder(Adresse adresse){return new Builder(adresse);}
+	}
+	
 }

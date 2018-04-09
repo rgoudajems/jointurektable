@@ -131,7 +131,7 @@ bin/kafka-console-consumer --bootstrap-server localhost:9092 \
         KTable<String, String> contactTable = builder.table(contactTopic);
         KTable<String, String> adresseTable = builder.table(adresseTopic);
 
-        String storeName = "joined-store-simple-adresse-contact";
+        String storeName = "joined-store-simple-adr-cont";
         contactTable.join(adresseTable,
             (contact,adresse ) -> contact + "/" + adresse,
             Materialized.as(storeName))
@@ -162,7 +162,7 @@ bin/kafka-console-consumer --bootstrap-server localhost:9092 \
         adressesProducerConfig.put(ProducerConfig.RETRIES_CONFIG, 0);
         adressesProducerConfig.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         adressesProducerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        //IntegrationTestUtils.produceKeyValuesSynchronously(adresseTopic, adressesRecords, adressesProducerConfig);
+        IntegrationTestUtils.produceKeyValuesSynchronously(adresseTopic, adressesRecords, adressesProducerConfig);
 
         //
         // Jointure Adresses--Contacts
@@ -173,10 +173,10 @@ bin/kafka-console-consumer --bootstrap-server localhost:9092 \
         consumerConfig.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         consumerConfig.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        List<KeyValue<String, String>> actualResults = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig,
+       List<KeyValue<String, String>> actualResults = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig,
         jointureTopic, expectedResults.size());
 
-        System.out.println(actualResults.toString());
+       // System.out.println(actualResults.toString());
         // Verify the (local) state store of the joined table.
         // For a comprehensive demonstration of interactive queries please refer to KafkaMusicExample.
         ReadOnlyKeyValueStore<String, String> readOnlyKeyValueStore =

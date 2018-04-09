@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="org.apache.kafka.streams.kstream.KTable"/>
+<fullyQualifiedTypeName name="com.github.jems.JsonSerde"/>
+<fullyQualifiedTypeName name="com.github.jems.Adresse"/>
+<fullyQualifiedTypeName name="com.github.jems.Contact"/>
+<fullyQualifiedTypeName name="org.apache.kafka.streams.kstream.Produced"/>
+<fullyQualifiedTypeName name="org.apache.kafka.streams.state.KeyValueStore"/>
+<fullyQualifiedTypeName name="org.apache.kafka.streams.kstream.Materialized"/>
+<fullyQualifiedTypeName name="org.apache.kafka.common.serialization.Serdes"/>
+<fullyQualifiedTypeName name="com.fasterxml.jackson.databind.ObjectMapper"/>
+<fullyQualifiedTypeName name="org.apache.kafka.connect.json.JsonSerializer"/>
+<fullyQualifiedTypeName name="com.fasterxml.jackson.databind.JsonSerializer"/>
+<fullyQualifiedTypeName name="org.apache.kafka.common.serialization.Serde"/>
+<fullyQualifiedTypeName name="com.fasterxml.jackson.databind.JsonDeserializer"/>
+<fullyQualifiedTypeName name="org.apache.kafka.connect.json.JsonDeserializer"/>
+<fullyQualifiedTypeName name="org.apache.kafka.streams.kstream.KStream"/>
+<fullyQualifiedTypeName name="java.util.StringTokenizer"/>
+<fullyQualifiedTypeName name="org.apache.kafka.common.serialization.StringSerializer"/>
+<fullyQualifiedTypeName name="com.google.common.collect.Table"/>
+<fullyQualifiedTypeName name="com.fasterxml.jackson.databind.JsonNode"/>
+<fullyQualifiedTypeName name="testjoin.com.test.kafka.Contact.Builder"/>
+<fullyQualifiedTypeName name="org.apache.kafka.streams.Consumed"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="java.util.stream.IntStream"/>
+<fullyQualifiedTypeName name="testjoin.com.test.kafka.JoinTabContAdr"/>
+<fullyQualifiedTypeName name="testjoin.com.test.kafka.Contact"/>
+<fullyQualifiedTypeName name="testjoin.com.test.kafka.Adresse"/>
+<fullyQualifiedTypeName name="testjoin.com.test.kafka.ContAdr"/>
+</qualifiedTypeNameHistroy>

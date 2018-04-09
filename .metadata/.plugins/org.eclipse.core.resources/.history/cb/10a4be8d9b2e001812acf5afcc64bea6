@@ -1,0 +1,226 @@
+package testjoin.com.test.kafka;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.StringSerializer;
+import org.apache.kafka.streams.Consumed;
+import org.apache.kafka.streams.KafkaStreams;
+import org.apache.kafka.streams.KeyValue;
+import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.StreamsConfig;
+import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.KTable;
+import org.apache.kafka.streams.kstream.Materialized;
+import org.apache.kafka.streams.kstream.Produced;
+import org.apache.kafka.streams.state.KeyValueIterator;
+import org.apache.kafka.streams.state.QueryableStoreTypes;
+import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
+public class JoinTabContAdr {
+	public static void main(final String[] args) throws Exception {
+		final String contactTopic = "contact";
+    	final String adresseTopic = "adresse";
+    	final String jointureTopic = "contact-adresse";
+        Properties config = new Properties();
+        config.put(StreamsConfig.APPLICATION_ID_CONFIG, "join-table-adresse-contact");
+        config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+        config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, JsonSerializer.class.getName());
+        config.put(StreamsConfig.STATE_DIR_CONFIG , "/tmp"); 
+        
+        
+        Contact c1=new Contact("C3", "rgouda@jems-group.com");	
+        Contact c2=new Contact("C1", "luis@jems-group.com");
+        Contact c3=new Contact("C2", "thomas@jems-group.com");
+        Contact c4=new Contact("C1", "luis@dovama.fr");
+        Contact c5=new Contact("C2", "thomas@antilop.fr"); 
+        Contact c6=new Contact("C3", "rgouda@antilop.com");
+        Contact c7=new Contact("C2", "thomas@phenix.fr");
+        
+       //Les données contacts 
+        List<KeyValue<String, Contact>> contactRecords = Arrays.asList(
+        	new KeyValue<>("C3",c1),		
+            new KeyValue<>("C1", c2),
+            new KeyValue<>("C2", c3),
+            new KeyValue<>("C1",c4),
+            new KeyValue<>("C2",c5), 
+            new KeyValue<>("C3",c6),
+            new KeyValue<>("C2",c7)
+        );
+        /*
+         * 
+         * Retenir les dernières valeurs de chaque id : 
+         * ("C1", "luis@dovama.fr"),
+         * ("C2", "thomas@phenix.fr") ,
+         * ("C3", "rgouda@antilop.com"),
+         * 
+         * 
+         * */
+        
+        /*Producer de données contact
+         * 
+         * bin/kafka-console-producer --broker-list localhost:9092 --topic simple-contact \
+  			--property "parse.key=true" \
+  			--property "key.separator=:"
+         * 
+         * */
+        
+        Adresse a1=new Adresse("C1", "Neuilly");
+        Adresse a2=new Adresse("C2", "Neuilly");
+        Adresse a3=new Adresse("C2", "Colombes");
+        Adresse a4=new Adresse("C3", "Neuilly");
+        Adresse a5=new Adresse("C2", "Sarclay");
+        Adresse a6=new Adresse("C2", "Defense");
+        Adresse a7=new Adresse("C1", "Colombes");
+        Adresse a8=new Adresse("C3", "Sarclay");
+        Adresse a9=new Adresse("C3", "Colombes");  
+       
+        // Les données adresses 
+        List<KeyValue<String, Adresse>> adressesRecords = Arrays.asList(
+            new KeyValue<>("C1",a1),
+            new KeyValue<>("C2",a2),
+            new KeyValue<>("C2",a3),
+            new KeyValue<>("C3",a4),
+            new KeyValue<>("C2",a5),
+            new KeyValue<>("C2",a6),
+            new KeyValue<>("C1",a7),
+            new KeyValue<>("C3",a8),
+            new KeyValue<>("C3",a9)   
+        );
+        
+        
+        /*
+         * 
+         * Retenir les dernières valeurs de chaque id : 
+         * ("C1", "Colombes"),
+         * ("C2", "Defense"),
+         * ("C3", "Colombes") 
+         * 
+         * 
+         * */
+        
+        /*Producer de données adresse 
+bin/kafka-console-producer --broker-list localhost:9092 --topic simple-adresse \
+--property "parse.key=true" \
+--property "key.separator=:"
+         * */
+        
+        /*Consommateur de données jointure contact-adresse
+         * 
+bin/kafka-console-consumer --bootstrap-server localhost:9092 \
+--topic  contacts-adresses-simple \
+--from-beginning \
+--formatter kafka.tools.DefaultMessageFormatter \
+--property print.key=true \
+--property print.value=true \
+--property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer \
+--property value.deserializer=org.apache.kafka.common.serialization.StringDeserializer 
+         * */
+              
+      ContAdr ca1 = new ContAdr(c4,a1);
+      ContAdr ca2 = new ContAdr(c4,a1);
+      ContAdr ca3 = new ContAdr(c4,a7);
+      ContAdr ca4 = new ContAdr(c3,a6);
+      ContAdr ca5 = new ContAdr(c5,a8);
+      ContAdr ca6 = new ContAdr(c6,a9);
+      
+      List<KeyValue<String, ContAdr>> expectedResults = Arrays.asList(
+            new KeyValue<>("C1", ca1),
+            new KeyValue<>("C1", ca2),
+            new KeyValue<>("C1", ca3),
+            new KeyValue<>("C2", ca4),
+            new KeyValue<>("C2", ca5),
+            new KeyValue<>("C3", ca6)
+        );
+
+        List<KeyValue<String, ContAdr>> expectedResultsForJoinStateStore = Arrays.asList(
+        		new KeyValue<>("C1", new ContAdr(new Contact("C1", "luis@dovama.fr"), new Adresse("C1", "Colombes"))),
+        		new KeyValue<>("C2", new ContAdr(new Contact("C2", "thomas@phenix.fr"), new Adresse("C2", "Defense"))),
+        		new KeyValue<>("C3", new ContAdr(new Contact("C3", "rgouda@antilop.com"), new Adresse("C3", "Colombes")))
+       
+        );
+      //  final Serdes stringSerde = (Serdes) Serdes.String();
+        JsonSerde<Contact> contactSerde = new JsonSerde<>(Contact.class);
+        JsonSerde<Adresse> adresseSerde = new JsonSerde<>(Adresse.class);
+        JsonSerde<ContAdr> contadrSerde = new JsonSerde<>(ContAdr.class);
+
+    
+        StreamsBuilder builder = new StreamsBuilder();
+        
+
+        KTable<String, Contact> contactTable = builder.table(contactTopic , Consumed.with(Serdes.String(), contactSerde) );
+        KTable<String, Adresse> adresseTable = builder.table(adresseTopic , Consumed.with(Serdes.String(), adresseSerde));
+
+        String storeName = "joined-store-adresse-contact";
+        contactTable.join(adresseTable,
+            (contact,adresse ) -> new ContAdr().withAdresse(adresse).withContact(contact),
+            Materialized.as(storeName))
+            .toStream()
+            .to(jointureTopic, Produced.with(Serdes.String(), contadrSerde));
+
+
+        KafkaStreams streams = new KafkaStreams(builder.build(), config );
+        streams.start();
+    
+        //
+        //  Publiction des contacts.
+        //
+        Properties contactsProducerConfig = new Properties();        
+        contactsProducerConfig.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        contactsProducerConfig.put(ProducerConfig.ACKS_CONFIG, "all");
+        contactsProducerConfig.put(ProducerConfig.RETRIES_CONFIG, 0);
+        contactsProducerConfig.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        contactsProducerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        //contactsProducerConfig.put(StreamsConfig.STATE_DIR_CONFIG , "/tmp"); 
+        IntegrationTestUtils.callKeyValuesSynchronously(contactTopic, contactRecords,contactsProducerConfig);
+
+        //
+        // Publiction des adresses.
+        //
+        Properties adressesProducerConfig = new Properties();
+        adressesProducerConfig.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        adressesProducerConfig.put(ProducerConfig.ACKS_CONFIG, "all");
+        adressesProducerConfig.put(ProducerConfig.RETRIES_CONFIG, 0);
+        adressesProducerConfig.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        adressesProducerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        //adressesProducerConfig.put(StreamsConfig.STATE_DIR_CONFIG , "/tmp"); 
+        IntegrationTestUtils.callKeyValuesSynchronously(adresseTopic, adressesRecords, adressesProducerConfig);
+
+        //
+        // Jointure Adresses--Contacts
+        //
+        Properties consumerConfig = new Properties();
+        consumerConfig.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        consumerConfig.put(ConsumerConfig.GROUP_ID_CONFIG,  "table-table-simple-table-adresse-contact");
+        consumerConfig.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        consumerConfig.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        //consumerConfig.put(StreamsConfig.STATE_DIR_CONFIG , "/tmp"); 
+        List<KeyValue<String, Object>> actualResults = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig,
+        jointureTopic, expectedResults.size());
+
+        System.out.println(actualResults.toString());
+        // Verify the (local) state store of the joined table.
+        // For a comprehensive demonstration of interactive queries please refer to KafkaMusicExample.
+        ReadOnlyKeyValueStore<String, String> readOnlyKeyValueStore =
+            streams.store(storeName, QueryableStoreTypes.keyValueStore());
+        KeyValueIterator<String, String> keyValueIterator = readOnlyKeyValueStore.all();
+    //    assertThat(keyValueIterator).containsExactlyElementsOf(expectedResultsForJoinStateStore);
+
+        streams.close();
+ //       assertThat(actualResults).containsExactlyElementsOf(expectedResults);
+    
+
+ 
+}
+}

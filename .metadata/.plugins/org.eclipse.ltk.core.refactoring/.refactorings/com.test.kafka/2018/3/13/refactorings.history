@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;SimpleJoinTabContAdr.java&apos; to &apos;com.test.kafka/src/main/java/testjoin.com.test.kafka&apos;&#x0A;- Original project: &apos;com.test.kafka&apos;&#x0A;- Destination element: &apos;com.test.kafka/src/main/java/testjoin.com.test.kafka&apos;&#x0A;- Original element: &apos;testjoin.com.test.kafka.SimpleJoinTabContAdr.java&apos;" description="Copy compilation unit" destination="/src\/main\/java&lt;testjoin.com.test.kafka" element1="/src\/main\/java&lt;testjoin.com.test.kafka{SimpleJoinTabContAdr.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1522236467949" units="1" version="1.0"/>
+</session>

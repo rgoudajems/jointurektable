@@ -1,0 +1,58 @@
+package testjoin.com.test.kafka;
+
+import testjoin.com.test.kafka.Contact.Builder;
+
+public class ContAdr {
+Contact contact;
+Adresse adresse;
+public ContAdr(Contact contact, Adresse adresse) {
+	super();
+	this.contact = contact;
+	this.adresse = adresse;
+}
+public Contact getContact() {
+	return contact;
+}
+public void setContact(Contact contact) {
+	this.contact = contact;
+}
+public Adresse getAdresse() {
+	return adresse;
+}
+public void setAdresse(Adresse adresse) {
+	this.adresse = adresse;
+}
+
+
+public static final class Builder {
+    private Contact contact;
+    private Adresse adresse;
+
+    private Builder(Contact contact, Adresse adresse){
+       this.contact = contact;
+       this.adresse = adresse; 
+    }
+    private Builder(Contact contact){
+        this.contact = contact;
+        this.adresse = new Adresse ("null", "null"); 
+     }
+
+    private Builder(Adresse adresse){
+        this.contact = new Contact ("null", "null");
+        this.adresse = adresse ; 
+     }
+
+    
+    private Builder(ContAdr contadr){
+        this.contact = contadr.getContact();
+        this.adresse = contadr.getAdresse(); 
+     }  
+    public ContAdr build(){
+        return new ContAdr (contact,adresse);
+    }
+
+}
+public static Builder builder(ContAdr contadr){return new Builder(contadr);}
+
+
+}

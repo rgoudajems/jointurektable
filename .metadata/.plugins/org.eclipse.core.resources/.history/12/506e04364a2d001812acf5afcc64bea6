@@ -1,0 +1,30 @@
+package testjoin.com.test.kafka;
+
+public class Adresse {
+	public Adresse() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	String id;
+	String Adresse;
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getAdresse() {
+		return Adresse;
+	}
+	public void setAdresse(String adresse) {
+		Adresse = adresse;
+	}
+	public Adresse(String id, String adresse) {
+		super();
+		this.id = id;
+		Adresse = adresse;
+	}
+	
+
+
+}

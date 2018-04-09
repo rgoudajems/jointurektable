@@ -1,28 +1,36 @@
 package testjoin.com.test.kafka;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.kafka.common.serialization.Serializer;
 
 import java.util.Map;
 
+import com.google.gson.Gson;
+
+
+import java.nio.charset.Charset;
+
+
 public class JsonSerializer<T> implements Serializer<T> {
-    private final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+    private Gson gson = new Gson();
 
     @Override
-    public void configure(Map<String, ?> configs, boolean isKey) {
+    public void configure(Map<String, ?> map, boolean b) {
+
     }
 
     @Override
-    public byte[] serialize(String topic, T data) {
-        try {
-            return data == null ? null : OBJECT_MAPPER.writeValueAsString(data).getBytes();
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+    public byte[] serialize(String topic, T t) {
+        return gson.toJson(t).getBytes(Charset.forName("UTF-8"));
     }
 
     @Override
     public void close() {
+
     }
+    
+    public JsonSerializer() {}
+    
+
 }
